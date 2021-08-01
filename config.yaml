@@ -1,0 +1,47 @@
+serviceName: cloudrun-srv
+image: gcr.io/chaordic/hello-app
+tagStrategy: git-hash # | semantic
+publicEndpoint: true
+region: europe-west6
+database: # optional
+  type: postgres
+baseEnv:
+  envVars:
+    foo: bar
+  secrets:
+    verySecret: gcp-secret
+environments:
+  prod: 
+    project: chaordic
+    domain: cde.app # optional
+    dnsZone: cdeapp # optional
+    deployment:
+      canary: # rolling is default
+        incrementPercentage: 10
+        supervisor: #some
+        metrics:
+          500errors: "<20%"
+      trigger:
+        branch: main
+        event: tag # tag, commit, branch, pr
+  staging:
+    project: chaordic-staging
+    domain: staging.cde.app # optional
+    dnsZone: cdeapp # optional
+    trigger:
+      branch: main
+      event: push # tag, commit, branch
+  dev:
+    dynamic: true
+    project:  chaordic-dev
+    trigger:
+      branch: feature/**
+      event: new_branch
+    env:
+      envVars:
+        foo: bar
+      secrets:
+        verySecret: 
+
+
+

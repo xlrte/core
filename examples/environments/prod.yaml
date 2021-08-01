@@ -1,0 +1,17 @@
+# should this be keyed by service?
+project: chaordic
+region: europe-west6
+domain: cde.app # optional
+dnsZone: cdeapp # optional
+connections:
+  database:
+    size: n1-foo-bar
+deployment:
+  canary: # rolling is default
+    incrementPercentage: 10
+    supervisor: #some
+    metrics:
+      500errors: "<20%"
+  trigger:
+    branch: main
+    event: tag # tag, commit, pr

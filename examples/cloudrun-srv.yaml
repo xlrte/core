@@ -1,0 +1,34 @@
+name: cloudrun-srv
+runtime: cloudrun # could also be "k8s", "lambda"
+  #   baseName: gcr.io/chaordic/hello-app
+  # - type: lambda
+  #   baseName: s3://mybucket/lambda-app
+artifact:
+  # repository?
+  baseName: gcr.io/chaordic/hello-app
+  type: docker # could also be zip for lambda archive
+ports: ## not sure about how to map exposed ports
+  - type: http2
+    public: true
+    path: /foo
+resources:
+  database: 
+  - type: postgres # mysql, dynamodb, etc
+    name: my-pg-db
+  pubsub:
+    consume:
+    - some_event
+    - some_other_event
+    produce:
+    - third_type_of_event
+  storage:
+    backend: gcp
+    buckets:
+    - foo-bucket
+env:
+  vars:
+    foo: bar
+  secrets:
+    verySecret: 
+      name: very-secret
+      type: volume # envVar
