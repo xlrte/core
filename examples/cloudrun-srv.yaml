@@ -1,11 +1,7 @@
 name: cloudrun-srv
 runtime: cloudrun # could also be "k8s", "lambda"
-  #   baseName: gcr.io/chaordic/hello-app
-  # - type: lambda
-  #   baseName: s3://mybucket/lambda-app
 artifact:
-  # repository?
-  baseName: gcr.io/chaordic/hello-app
+  baseName: gcr.io/chaordic/hello-app   # repository?
   type: docker # could also be zip for lambda archive
 ports: ## not sure about how to map exposed ports
   - type: http2

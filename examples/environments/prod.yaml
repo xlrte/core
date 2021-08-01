@@ -1,6 +1,7 @@
 # should this be keyed by service?
 project: chaordic
 region: europe-west6
+## how do we deal with domain, dns, for multiple services?
 domain: cde.app # optional
 dnsZone: cdeapp # optional
 connections:
