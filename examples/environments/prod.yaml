@@ -1,11 +1,22 @@
 # should this be keyed by service?
-project: chaordic
+cloud: gcp
+context: chaordic # project in GCP terms
 region: europe-west6
 ## how do we deal with domain, dns, for multiple services?
-domain: cde.app # optional
-dnsZone: cdeapp # optional
-connections:
-  database:
+network:
+  domain: cde.app # optional
+  dnsZone: cdeapp # optional
+resources:
+  cloudrun:
+    memory: 512m
+    cpu: 1
+    timeout: 300
+    max_requests: 80
+    scaling:
+      min_instances: 0
+      max_instances: 100
+  cloudsql:
+  - name: my-pg-db # omit and provide type, and it will be applied to all types of the same
     size: n1-foo-bar
 deployment:
   canary: # rolling is default
@@ -13,6 +24,10 @@ deployment:
     supervisor: #some
     metrics:
       500errors: "<20%"
-  trigger:
+  trigger: 
+    # repo: # what if the trigger is from another repo? like this?
+    # any one of these trigger an update? Or do we keep it in the service?
+    # - github.com/xlrte/server
+    # - github.com/xlrte/service2
     branch: main
     event: tag # tag, commit, pr
