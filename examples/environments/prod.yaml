@@ -1,13 +1,14 @@
 # should this be keyed by service?
-cloud: gcp
+provider: gcp
 context: chaordic # project in GCP terms
 region: europe-west6
 ## how do we deal with domain, dns, for multiple services?
-network:
-  domain: cde.app # optional
-  dnsZone: cdeapp # optional
 resources:
+  http:
+    domain: cde.app # optional
+    dnsZone: cdeapp # optional
   cloudrun:
+  - name: cloudrun-srv
     memory: 512m
     cpu: 1
     timeout: 300
@@ -29,5 +30,6 @@ deployment:
     # any one of these trigger an update? Or do we keep it in the service?
     # - github.com/xlrte/server
     # - github.com/xlrte/service2
-    branch: main
-    event: tag # tag, commit, pr
+    git:
+      branch: main
+      event: tag # tag, commit, pr

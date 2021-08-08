@@ -1,7 +1,6 @@
 package gcp
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -14,21 +13,18 @@ type CloudRun struct {
 type CloudRunResources struct {
 }
 
-type runtime string
-
-func (g runtime) Greet() {
-	fmt.Println("Hello Universe")
+type GcpRuntime struct {
 }
 
-func (g runtime) SupportServiceRuntime(name string) bool {
+func (g *GcpRuntime) SupportServiceRuntime(name string) bool {
 	return name == "cloudrun"
 }
 
-func (g runtime) Resources() []api.Resource {
+func (g *GcpRuntime) Resources() []api.Resource {
 	return []api.Resource{}
 }
 
-func (g runtime) Configure(name string, artifact api.Artifact, env api.Env, previousOutputs []api.Output) error {
+func (g *GcpRuntime) Configure(name string, artifact api.Artifact, env api.EnvVars) error {
 	tmpDir, err := ioutil.TempDir("", "tfinstall")
 	if err != nil {
 		log.Fatalf("error creating temp dir: %s", err)
@@ -37,6 +33,3 @@ func (g runtime) Configure(name string, artifact api.Artifact, env api.Env, prev
 
 	return nil
 }
-
-// Runtime is the exported interface
-var Runtime runtime //nolint

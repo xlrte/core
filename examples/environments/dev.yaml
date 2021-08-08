@@ -3,8 +3,10 @@ project:  chaordic-dev
 region: europe-west6
 deployment:
   trigger:
-    branch: feature/**
-    event: commit
+    is_local: true
+    git:
+      branch: feature/**
+      event: commit
 env:
   vars:
     foo: baz

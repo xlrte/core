@@ -5,6 +5,8 @@ import (
 	"html/template"
 	"os"
 	"path/filepath"
+
+	"github.com/xlrte/core/pkg/api"
 )
 
 //go:embed cloudrun/variables.tf
@@ -23,6 +25,7 @@ type cloudRunConfig struct {
 	Project     string
 	Traffic     int
 	IsPublic    bool
+	Env         *api.EnvVars
 }
 
 type crFile struct {
