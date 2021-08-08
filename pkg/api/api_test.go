@@ -7,7 +7,7 @@ import (
 )
 
 func Test_Read_Service_Definition(t *testing.T) {
-	service, err := ReadServiceDefinition("testdata/cloudrun-srv.yaml")
+	service, err := readServiceDefinition("testdata/cloudrun-srv.yaml")
 
 	assert.NoError(t, err)
 	assert.Equal(t, "cloudrun-srv", service.Name)
@@ -17,23 +17,29 @@ func Test_Read_Service_Definition(t *testing.T) {
 }
 
 func Test_Invalid_Service(t *testing.T) {
-	_, err := ReadServiceDefinition("testdata/invalid-service.yaml")
+	_, err := readServiceDefinition("testdata/invalid-service.yaml")
 
 	assert.Error(t, err)
 	validations := GetValidationErrors(err)
 	assert.NotNil(t, validations)
 	assert.True(t, len(*validations) > 0)
 
-	_, err = ReadServiceDefinition("testdata/invalid-service.bla")
+	_, err = readServiceDefinition("testdata/invalid-service.bla")
 
 	assert.Error(t, err)
 	validations = GetValidationErrors(err)
 	assert.Nil(t, validations)
 }
 
-func Test_Load_Plugins(t *testing.T) {
-	runtimes, err := GetRuntimes("testdata/plugins")
+func Test_ReadAll_Service_Definitions(t *testing.T) {
+	services, err := ReadAllServices("testdata/services")
 
 	assert.NoError(t, err)
-	assert.Len(t, runtimes, 1)
+	assert.Len(t, services, 2)
+}
+
+func Test_ReadAll_Service_Definitions_Duplicate_Name(t *testing.T) {
+	_, err := ReadAllServices("testdata/duplicate-services")
+
+	assert.Error(t, err)
 }

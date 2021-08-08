@@ -2,10 +2,9 @@ package api
 
 import (
 	"fmt"
-	"io/fs"
 	"io/ioutil"
+	"os"
 	"path/filepath"
-	"plugin"
 	"strings"
 
 	"github.com/go-playground/validator"
@@ -42,6 +41,10 @@ type Output struct {
 	Value string
 }
 
+type Runtimes struct {
+	Runtimes []Runtime
+}
+
 // Resources have an internal dependency order with outputs.
 type Runtime interface {
 	SupportServiceRuntime(name string) bool
@@ -56,22 +59,22 @@ type Resource interface {
 	Migrate() error
 }
 
-func ReadServiceDefinition(fileLocation string) (*Service, error) {
+func readServiceDefinition(fileLocation string) (Service, error) {
 	var service Service
 	data, err := ioutil.ReadFile(fileLocation)
 	if err != nil {
-		return nil, err
+		return Service{}, err
 	}
 	err = yaml.Unmarshal([]byte(data), &service)
 	if err != nil {
-		return nil, err
+		return Service{}, err
 	}
 
 	validate := validator.New()
 	if errs := validate.Struct(service); errs != nil {
-		return nil, errs
+		return Service{}, errs
 	}
-	return &service, nil
+	return service, nil
 }
 
 func GetValidationErrors(err error) *validator.ValidationErrors {
@@ -83,49 +86,41 @@ func GetValidationErrors(err error) *validator.ValidationErrors {
 	}
 }
 
-func GetRuntimeFor(service *Service) *Runtime {
-	return nil
+func (runtimes *Runtimes) GetRuntimeFor(service *Service) (Runtime, error) {
+	for _, rtime := range runtimes.Runtimes {
+		if rtime.SupportServiceRuntime(service.Runtime) {
+			return rtime, nil
+		}
+	}
+	return nil, fmt.Errorf("could not find a Runtime that supports service of type %s", service.Runtime)
 }
 
-func GetRuntimes(basePath string) ([]Runtime, error) {
-	runtimes := []Runtime{}
-	err := filepath.WalkDir(basePath, func(path string, info fs.DirEntry, err error) error {
-		if err != nil {
-			return err
-		}
-		if !info.Type().IsRegular() || !strings.HasSuffix(path, ".so") {
+func ReadAllServices(serviceDir string) ([]Service, error) {
+	services := []Service{}
+
+	err := filepath.Walk(serviceDir, func(path string, info os.FileInfo, err error) error {
+		if info.IsDir() || (!strings.HasSuffix(path, ".yml") && !strings.HasSuffix(path, ".yaml")) {
 			return nil
 		}
-
-		plug, err := plugin.Open(path)
-		if err != nil {
-			fmt.Println("plugin.Open")
-			fmt.Println(err)
-			return err
+		service, e := readServiceDefinition(path)
+		if e != nil {
+			return e
 		}
-
-		symRuntime, err := plug.Lookup("Runtime")
-		if err != nil {
-
-			fmt.Println("plugin.Loopup")
-			fmt.Println(err)
-			return err
-		}
-		var runtime Runtime
-		runtime, ok := symRuntime.(Runtime)
-		if !ok {
-
-			fmt.Println("plugin.Cast")
-			fmt.Println(ok)
-			return fmt.Errorf("the plugin %s is not a valid implementation of Runtime", path)
-		}
-		runtimes = append(runtimes, runtime)
+		services = append(services, service)
 
 		return nil
 	})
 	if err != nil {
 		return nil, err
 	}
+	names := make(map[string]*Service)
+	for _, service := range services {
+		_, found := names[service.Name]
+		if found {
+			return nil, fmt.Errorf("duplicate service with name %s found", service.Name)
+		}
+		names[service.Name] = &service
+	}
 
-	return runtimes, nil
+	return services, nil
 }
