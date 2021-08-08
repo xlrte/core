@@ -1,0 +1,4 @@
+name: cloudrun-srv
+runtime: cloudrun # could also be "k8s", "lambda"
+artifact:
+  base_name: gcr.io/chaordic/hello-app # repository?

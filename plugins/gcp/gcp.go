@@ -1,12 +1,26 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
 
-type greeting string
+	"github.com/xlrte/core/pkg/api"
+)
 
-func (g greeting) Greet() {
+type runtime string
+
+func (g runtime) Greet() {
 	fmt.Println("Hello Universe")
 }
 
-// exported
-var Greeter greeting
+func (g runtime) SupportServiceRuntime(name string) bool {
+	return false
+}
+func (g runtime) Resources() []api.Resource {
+	return []api.Resource{}
+}
+func (g runtime) Configure(name string, artifact api.Artifact, env api.Env, previousOutputs []api.Output) error {
+	return nil
+}
+
+// Runtime is the exported interface
+var Runtime runtime //nolint
