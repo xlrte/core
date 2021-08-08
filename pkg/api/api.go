@@ -13,7 +13,7 @@ import (
 
 type Service struct {
 	Name      string                 `yaml:"name" validate:"required"`
-	Runtime   string                 `yaml:"runtime" validate:"oneof=cloudrun lambda k8s"`
+	Runtime   string                 `yaml:"runtime" validate:"required"`
 	Artifact  Artifact               `yaml:"artifact" validate:"required"`
 	Network   map[string]interface{} `yaml:"network"`
 	DependsOn map[string]interface{} `yaml:"depends_on"`

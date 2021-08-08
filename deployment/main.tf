@@ -26,7 +26,7 @@ module "network" {
 
 
 output "cloud-run-url"{
-  value = module.webapp.cloud_run_endpoint[0].url
+  value = module.webapp.cloud_run_endpoint
 }
 
 output "environment"{

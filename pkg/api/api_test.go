@@ -36,10 +36,17 @@ func Test_ReadAll_Service_Definitions(t *testing.T) {
 
 	assert.NoError(t, err)
 	assert.Len(t, services, 2)
+
+	names := make(map[string]*string)
+
+	for _, svc := range services {
+		names[svc.Name] = &svc.Name
+	}
+	assert.NotNil(t, names["cloudrun-srv"])
+	assert.NotNil(t, names["cloudrun-srv2"])
 }
 
 func Test_ReadAll_Service_Definitions_Duplicate_Name(t *testing.T) {
 	_, err := ReadAllServices("testdata/duplicate-services")
-
 	assert.Error(t, err)
 }
