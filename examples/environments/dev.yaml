@@ -1,3 +1,4 @@
+name: dev
 dynamic: true
 project:  chaordic-dev
 region: europe-west6

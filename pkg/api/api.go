@@ -8,8 +8,20 @@ type Runtime interface {
 }
 
 type Resource interface {
+	Named
 	Sort(resources []Resource) []Resource
-	Name() string
 	Configure(serviceConfig []byte, resourceConfig []byte) error
 	Migrate() error
+}
+
+type Named interface {
+	Name() string
+}
+
+func (env *Environment) Name() string {
+	return env.EnvName
+}
+
+func (svc *Service) Name() string {
+	return svc.SVCName
 }

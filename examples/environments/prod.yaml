@@ -1,4 +1,5 @@
 # should this be keyed by service?
+name: prod
 provider: gcp
 context: chaordic # project in GCP terms
 region: europe-west6

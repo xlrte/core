@@ -13,6 +13,7 @@ type DeploynmentConfig struct {
 }
 
 type Environment struct {
+	EnvName    string                 `yaml:"name" validate:"required"`
 	IsDynamic  bool                   `yaml:"dynamic"`
 	Provider   string                 `yaml:"provider" validate:"required"`
 	Context    string                 `yaml:"context" validate:"required"`
@@ -45,7 +46,7 @@ type GitTrigger struct {
 }
 
 type Service struct {
-	Name      string                 `yaml:"name" validate:"required"`
+	SVCName   string                 `yaml:"name" validate:"required"`
 	Runtime   string                 `yaml:"runtime" validate:"required"`
 	Artifact  Artifact               `yaml:"artifact" validate:"required"`
 	Network   map[string]interface{} `yaml:"network"`

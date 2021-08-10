@@ -11,22 +11,52 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-func readServiceDefinition(fileLocation string) (Service, error) {
-	var service Service
+func readDefinition(fileLocation string, strct interface{}) error {
 	data, err := ioutil.ReadFile(fileLocation)
 	if err != nil {
-		return Service{}, err
+		return err
 	}
-	err = yaml.Unmarshal([]byte(data), &service)
+	err = yaml.Unmarshal([]byte(data), strct)
 	if err != nil {
-		return Service{}, err
+		return err
 	}
 
 	validate := validator.New()
-	if errs := validate.Struct(service); errs != nil {
-		return Service{}, errs
+	if errs := validate.Struct(strct); errs != nil {
+		return errs
 	}
-	return service, nil
+	return nil
+}
+
+func readAllDefinitions(serviceDir string, createFn func() Named) ([]Named, error) {
+	defs := []Named{}
+
+	err := filepath.Walk(serviceDir, func(path string, info os.FileInfo, err error) error {
+		if info.IsDir() || (!strings.HasSuffix(path, ".yml") && !strings.HasSuffix(path, ".yaml")) {
+			return nil
+		}
+		def := createFn()
+		e := readDefinition(path, def)
+		if e != nil {
+			return e
+		}
+		defs = append(defs, def)
+
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	names := make(map[string]Named)
+	for _, def := range defs {
+		_, found := names[def.Name()]
+		if found {
+			return nil, fmt.Errorf("duplicate definition with name %s found", def.Name())
+		}
+		names[def.Name()] = def
+	}
+
+	return defs, nil
 }
 
 func GetValidationErrors(err error) *validator.ValidationErrors {
@@ -48,31 +78,29 @@ func (runtimes *Runtimes) GetRuntimeFor(service *Service) (Runtime, error) {
 }
 
 func ReadAllServices(serviceDir string) ([]Service, error) {
-	services := []Service{}
-
-	err := filepath.Walk(serviceDir, func(path string, info os.FileInfo, err error) error {
-		if info.IsDir() || (!strings.HasSuffix(path, ".yml") && !strings.HasSuffix(path, ".yaml")) {
-			return nil
-		}
-		service, e := readServiceDefinition(path)
-		if e != nil {
-			return e
-		}
-		services = append(services, service)
-
-		return nil
+	defs, err := readAllDefinitions(serviceDir, func() Named {
+		return &Service{}
 	})
 	if err != nil {
 		return nil, err
 	}
-	names := make(map[string]*Service)
-	for _, service := range services {
-		_, found := names[service.Name]
-		if found {
-			return nil, fmt.Errorf("duplicate service with name %s found", service.Name)
-		}
-		names[service.Name] = &service
+	services := []Service{}
+	for _, def := range defs {
+		services = append(services, *def.(*Service))
 	}
+	return services, nil
+}
 
+func ReadAllEnvironments(envDir string) ([]Environment, error) {
+	defs, err := readAllDefinitions(envDir, func() Named {
+		return &Environment{}
+	})
+	if err != nil {
+		return nil, err
+	}
+	services := []Environment{}
+	for _, def := range defs {
+		services = append(services, *def.(*Environment))
+	}
 	return services, nil
 }

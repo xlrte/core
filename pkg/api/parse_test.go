@@ -7,24 +7,26 @@ import (
 )
 
 func Test_Read_Service_Definition(t *testing.T) {
-	service, err := readServiceDefinition("testdata/cloudrun-srv.yaml")
+	service := &Service{}
+	err := readDefinition("testdata/cloudrun-srv.yaml", service)
 
 	assert.NoError(t, err)
-	assert.Equal(t, "cloudrun-srv", service.Name)
+	assert.Equal(t, "cloudrun-srv", service.Name())
 	assert.Equal(t, "cloudrun", service.Runtime)
 	assert.Equal(t, "gcr.io/chaordic/hello-app", service.Artifact.BaseName)
 	assert.Equal(t, "docker", service.Artifact.Type)
 }
 
 func Test_Invalid_Service(t *testing.T) {
-	_, err := readServiceDefinition("testdata/invalid-service.yaml")
+	service := &Service{}
+	err := readDefinition("testdata/invalid-service.yaml", service)
 
 	assert.Error(t, err)
 	validations := GetValidationErrors(err)
 	assert.NotNil(t, validations)
 	assert.True(t, len(*validations) > 0)
 
-	_, err = readServiceDefinition("testdata/invalid-service.bla")
+	err = readDefinition("testdata/invalid-service.bla", service)
 
 	assert.Error(t, err)
 	validations = GetValidationErrors(err)
@@ -40,7 +42,7 @@ func Test_ReadAll_Service_Definitions(t *testing.T) {
 	names := make(map[string]*string)
 
 	for _, svc := range services {
-		names[svc.Name] = &svc.Name
+		names[svc.SVCName] = &svc.SVCName
 	}
 	assert.NotNil(t, names["cloudrun-srv"])
 	assert.NotNil(t, names["cloudrun-srv2"])
