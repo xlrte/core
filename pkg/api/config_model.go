@@ -1,24 +1,12 @@
 package api
 
-type ConfigSet struct {
-	Environments []Environment
-	Services     []Service
-	Resources    []Resource
-}
-
-type DeploynmentConfig struct {
-	Environment Environment
-	Services    []Service
-	Resources   []Resource
-}
-
 type Environment struct {
 	EnvName    string                 `yaml:"name" validate:"required"`
 	IsDynamic  bool                   `yaml:"dynamic"`
 	Provider   string                 `yaml:"provider" validate:"required"`
 	Context    string                 `yaml:"context" validate:"required"`
 	Region     string                 `yaml:"region" validate:"required"`
-	Resources  map[string]interface{} `yaml:"name"`
+	Resources  map[string]interface{} `yaml:"resources"`
 	Deployment Deployment             `yaml:"deployment" validate:"required"`
 	Env        EnvVars                `yaml:"env"`
 }
@@ -68,8 +56,4 @@ type Http struct {
 type EnvVars struct {
 	Vars map[string]string `yaml:"vars"`
 	// Secrets
-}
-
-type Runtimes struct {
-	Runtimes []Runtime
 }

@@ -68,15 +68,6 @@ func GetValidationErrors(err error) *validator.ValidationErrors {
 	}
 }
 
-func (runtimes *Runtimes) GetRuntimeFor(service *Service) (Runtime, error) {
-	for _, rtime := range runtimes.Runtimes {
-		if rtime.SupportServiceRuntime(service.Runtime) {
-			return rtime, nil
-		}
-	}
-	return nil, fmt.Errorf("could not find a Runtime that supports service of type %s", service.Runtime)
-}
-
 func ReadAllServices(serviceDir string) ([]Service, error) {
 	defs, err := readAllDefinitions(serviceDir, func() Named {
 		return &Service{}

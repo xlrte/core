@@ -1,6 +1,7 @@
 package api
 
 import (
+	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -49,6 +50,20 @@ func Test_ReadAll_Service_Definitions(t *testing.T) {
 }
 
 func Test_ReadAll_Service_Definitions_Duplicate_Name(t *testing.T) {
-	_, err := ReadAllServices("testdata/duplicate-services")
+	_, err := ReadAllServices(filepath.Join("testdata", "duplicate-services"))
 	assert.Error(t, err)
+}
+
+func Test_Read_Env_Definition(t *testing.T) {
+	envs, err := ReadAllEnvironments(filepath.Join("testdata", "environments"))
+	assert.NoError(t, err)
+
+	assert.Equal(t, len(envs), 1)
+	assert.Equal(t, envs[0].EnvName, "prod")
+	assert.False(t, envs[0].IsDynamic)
+	assert.Equal(t, envs[0].Provider, "gcp")
+	assert.Equal(t, envs[0].Region, "europe-west6")
+
+	assert.Equal(t, envs[0].Deployment.Trigger.Git.BranchPattern, "main")
+	assert.Equal(t, envs[0].Deployment.Trigger.Git.Event, "tag")
 }
