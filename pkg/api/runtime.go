@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 )
 
-func ParseDeploymentConfig(rootDir string, selector TriggerSelector, runtimes *Runtimes) ([]*DeploymentConfig, error) {
+func parseDeploymentConfig(rootDir string, selector TriggerSelector, runtimes *Runtimes) ([]*DeploymentConfig, error) {
 	envs, err := ReadAllEnvironments(filepath.Join(rootDir, "environments"))
 	if err != nil {
 		return nil, err
@@ -35,7 +35,7 @@ func ParseDeploymentConfig(rootDir string, selector TriggerSelector, runtimes *R
 			return nil, err
 		}
 		conf := runtimeMap[rtme.Name()]
-		if conf != nil {
+		if conf == nil {
 			conf = &DeploymentConfig{
 				Runtime:     rtme,
 				Services:    []*Service{&svc},
