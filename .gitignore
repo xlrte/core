@@ -3,3 +3,5 @@ terraform.tfstate
 terraform.tfstate.backup
 *.so
 pkg/api/testdata/plugins
+.vscode/
+.metals/
