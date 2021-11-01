@@ -1,0 +1,23 @@
+on: [push, pull_request]
+name: test & lint
+jobs:
+  test:
+    strategy:
+      matrix:
+        go-version: [1.17.x]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Install Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: ${{ matrix.go-version }}
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Test
+      run: go test ./...
+    - name: lint
+      uses: golangci/golangci-lint-action@v2
+      with:
+        version: v1.42
+        args: --timeout=2m

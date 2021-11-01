@@ -1,3 +1,14 @@
 .terraform/
 terraform.tfstate
 terraform.tfstate.backup
+*.so
+pkg/api/testdata/plugins
+.vscode/
+.metals/
+tmp/
+output/
+.xlrte/environments
+.xlrte/modules
+pkg/api/secrets/testdata/environments
+pkg/api/secrets/testdata/.xlrte
+coverage.out

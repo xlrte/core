@@ -1,0 +1,26 @@
+name: cloudrun-srv2
+runtime: cloudrun # could also be "k8s", "lambda"
+spec:
+  base_name: gcr.io/chaordic/hello-app # repository?
+  http:
+    path: /foo
+depends_on:
+  cloudsql: 
+  - name: my-pg-db
+    type: postgres # mysql, dynamodb, etc
+  pubsub:
+    consume:
+    - some_event
+    - some_other_event
+    produce:
+    - third_type_of_event
+  gcs:
+    - name: foo-bucket
+      access: read
+    - name: bar
+      access: readwrite
+env:
+  vars:
+    foo: bar
+  secrets:
+    otherSecret: theSecret

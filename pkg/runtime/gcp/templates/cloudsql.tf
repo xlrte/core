@@ -1,0 +1,19 @@
+module "cloudsql-{{.DbName}}" {
+  source = "../modules/cloudsql_postgres"
+  db_name = "{{.DbName}}"
+  project = var.project
+  region = var.region
+  environment = var.environment
+  master_user_name = var.secret_cloudsql-{{.DbName}}_USER
+  master_user_password = var.secret_cloudsql-{{.DbName}}_PASSWORD
+  instance_name = "{{.DbName}}-instance"
+  machine_type = "{{.MachineType}}"
+  disk_size = {{.Size}}
+  deletion_protection = {{.DeleteProtection}}
+  backup_enabled = {{.BackupEnabled}}
+  backup_start_time = "{{.BackupStartTime}}"
+  postgres_point_in_time_recovery_enabled = {{.PointInTimeRecoveryEnabled}}
+  maintenance_window_day = {{.MaintenanceWindowDay}}
+  maintenance_window_hour = {{.MaintenanceWindowHour}}
+  network_self_link = {{.NetworkLink}}
+}

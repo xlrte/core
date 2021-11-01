@@ -1,0 +1,3 @@
+cloudrun:
+- name: cloudrun-srv
+  public: true

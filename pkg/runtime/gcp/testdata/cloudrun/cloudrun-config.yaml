@@ -1,0 +1,10 @@
+cloudrun:
+- name: cloudrun-srv
+  public: true
+  memory: 1024Mi
+  cpu: 2
+  timeout: 100
+  max_requests: 10
+  scaling:
+    min_instances: 1
+    max_instances: 10

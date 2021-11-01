@@ -1,0 +1,4 @@
+name: cloudrun-srv
+runtime: cloudrun # could also be "k8s", "lambda"
+definitions:
+  base_name: hello-app # repository?

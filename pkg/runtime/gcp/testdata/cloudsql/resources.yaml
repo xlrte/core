@@ -1,0 +1,5 @@
+cloudsql:
+- name: my-pg-db # omit and provide type, and it will be applied to all types of the same
+  machine_type: db-f1-micro  #db-standard-1
+  storage_size: 10
+  delete_protection: true

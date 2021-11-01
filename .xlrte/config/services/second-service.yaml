@@ -1,0 +1,19 @@
+name: cloudrun-srv2
+runtime: cloudrun
+spec:
+  base_name: hello-app
+  http:
+    public: true
+    http2: false
+depends_on:
+  pubsub:
+    produce:
+    - name: some_topic
+  cloudstorage:
+  - name: foo-bucket
+    access: readwrite
+env:
+  vars:
+    foo: bar
+  secrets:
+    very_secret: very-secret

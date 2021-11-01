@@ -1,0 +1,5 @@
+cloudrun:
+- name: cloudrun-srv
+  domain:
+    name: xlrte.org
+    dns_zone: xlrte_zone 

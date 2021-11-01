@@ -1,0 +1,11 @@
+  cloudstorage:
+  - name: foo-bucket
+    access: read
+  - name: bar
+    access: read
+    owner: true
+  - name: baz
+    access: readwrite
+  - name: bazf
+    access: readwrite
+    owner: false

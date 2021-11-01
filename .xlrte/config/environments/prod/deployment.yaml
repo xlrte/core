@@ -1,0 +1,8 @@
+git:
+  branch: main # branch or branch pattern
+  event: tag # tag, commit, pr
+#   canary: # rolling is default
+#     incrementPercentage: 10
+#     supervisor: #some
+#     metrics:
+#       500errors: "<20%"

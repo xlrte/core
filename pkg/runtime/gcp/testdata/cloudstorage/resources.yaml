@@ -1,0 +1,6 @@
+cloudstorage:
+- name: bar
+  location: EU
+  storage_class: MULTI_REGIONAL
+  versioning_enabled: true
+

@@ -1,0 +1,7 @@
+pubsub:
+- name: some_topic
+  ack_deadline_seconds: 30
+  message_retention_duration: 300000 # string as "s" in terraform
+  enable_message_ordering: true
+  retain_acked_messages: true
+

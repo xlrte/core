@@ -1,0 +1,3 @@
+cloudsql: 
+- name: my-pg-db
+  type: postgres # mysql, dynamodb, etc

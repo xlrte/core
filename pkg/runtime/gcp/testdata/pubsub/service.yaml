@@ -1,0 +1,7 @@
+pubsub:
+  consume:
+  - name: some_topic
+  - name: some_other_topic
+    owner: true
+  produce:
+  - name: third_type_of_topic
