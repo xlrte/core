@@ -1,20 +1,36 @@
-### To login:
+## What `xlrte` does, in user story form
+As a developer,
 
-* gcloud auth application-default login
+I want to be able to say _"I want to deploy a service that uses a database, a block storage bucket & publishes messages to a topic while listening to another"_,
 
-### GCP Services
+without having to figure out IAM permissions, network setup, initialization order of resources and the dozens of other infrastructure configuration issues that arise.
 
-* servicenetworking.googleapis.com
-* vpcaccess.googleapis.com
-* containerregistry.googleapis.com
-* dns.googleapis.com
-* pubsub.googleapis.com
-* run.googleapis.com
-* secretmanager.googleapis.com
-* sql-component.googleapis.com
-* storage.googleapis.com
+#### Focus on architecture, not infrastructure
+`xlrte` enables just this. The configuration below is all that is needed.
 
-### Push a docker image
-  gcloud auth configure-docker
-  docker build . -f hello-example.Dockerfile -t gcr.io/[project]/hello-app:v1
-  docker push gcr.io/[project]/hello-app:v1
+```yaml
+name: my-shiny-app
+runtime: cloudrun
+spec:
+  base_name: my-shiny-app
+  http:
+    public: true
+    http2: false
+depends_on:
+  cloudsql: 
+  - name: my-pg-db
+    type: postgres
+  pubsub:
+    consume:
+    - name: upload_events
+    produce:
+    - name: resize_events
+  cloudstorage:
+  - name: media-uploads
+    public: true
+    access: readwrite
+```
+
+To find out more:
+* [Read the documentation](https://xlrte.dev/docs/getting-started/setup-gcp)
+* checkout our [example project](https://github.com/xlrte/example-app-gcp)
