@@ -19,16 +19,16 @@ lint:
 build-mac-universal:
 	GOOS=darwin GOARCH=amd64 go build -ldflags "-X 'github.com/xlrte/core/pkg/cmd.Version=$(git_tag)' -X 'github.com/xlrte/core/pkg/cmd.BuildDate=\"$(date)\"'" -o xlrte-mac-x86 cmd/cli/main.go
 	GOOS=darwin GOARCH=arm64 go build -ldflags "-X 'github.com/xlrte/core/pkg/cmd.Version=$(git_tag)' -X 'github.com/xlrte/core/pkg/cmd.BuildDate=\"$(date)\"'" -o xlrte-mac-arm64 cmd/cli/main.go
-	lipo -create -output xlrte-mac-universal xlrte-mac-x86 xlrte-mac-arm64
+	lipo -create -output xlrte-macos.x86.arm64 xlrte-mac-x86 xlrte-mac-arm64
 	rm xlrte-mac-x86 xlrte-mac-arm64
 
 .PHONY: build-linux
 build-linux:
-	GOOS=linux GOARCH=amd64 go build -ldflags "-X 'github.com/xlrte/core/pkg/cmd.Version=$(git_tag)' -X 'github.com/xlrte/core/pkg/cmd.BuildDate=\"$(date)\"'" -o xlrte-linux-x86 cmd/cli/main.go
+	GOOS=linux GOARCH=amd64 go build -ldflags "-X 'github.com/xlrte/core/pkg/cmd.Version=$(git_tag)' -X 'github.com/xlrte/core/pkg/cmd.BuildDate=\"$(date)\"'" -o xlrte-linux.x86 cmd/cli/main.go
 
 .PHONY: build-windows
 build-windows:
-	GOOS=windows GOARCH=amd64 go build -ldflags "-X 'github.com/xlrte/core/pkg/cmd.Version=$(git_tag)' -X 'github.com/xlrte/core/pkg/cmd.BuildDate=\"$(date)\"'" -o xlrte-windows-x86 cmd/cli/main.go
+	GOOS=windows GOARCH=amd64 go build -ldflags "-X 'github.com/xlrte/core/pkg/cmd.Version=$(git_tag)' -X 'github.com/xlrte/core/pkg/cmd.BuildDate=\"$(date)\"'" -o xlrte-windows.x86 cmd/cli/main.go
 
 .PHONY: build
 build: build-mac-universal build-linux build-windows
