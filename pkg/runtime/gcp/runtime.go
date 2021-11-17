@@ -33,6 +33,7 @@ type gcpRuntime struct {
 	modulesDir  string
 	baseDir     string
 	Region      string
+	StateStore  string
 	Project     string
 	Environment string
 	resetVars   []string
@@ -155,6 +156,7 @@ func (rt *gcpRuntime) Init(ctx api.EnvContext) error {
 	rt.Project = ctx.Context
 	rt.Region = ctx.Region
 	rt.Environment = ctx.EnvName
+	rt.StateStore = ctx.StateStore
 	err := rt.setProvider()
 	return err
 }

@@ -25,7 +25,8 @@ func InitEnvironment(ctx context.Context, baseDir, env, context, region string, 
 	resourceFile := filepath.Join(envDir, "resources.yaml")
 	resourceContents := fmt.Sprintf(`context: %s
 region: %s
-`, context, region)
+state_store: %s
+`, context, region, "xlrte-state-"+context)
 	err := os.MkdirAll(filepath.Clean(envDir), 0750)
 	if err != nil {
 		return err

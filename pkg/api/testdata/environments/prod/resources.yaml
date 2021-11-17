@@ -2,6 +2,7 @@
 name: prod
 provider: gcp
 context: chaordic # project in GCP terms
+state_store: xlrte-state-chaordic
 region: europe-west6
 ## how do we deal with domain, dns, for multiple services?
 resources:
