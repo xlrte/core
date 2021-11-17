@@ -51,3 +51,16 @@ resource "google_project_service" "project" {
 
   disable_dependent_services = true
 }
+
+resource "google_storage_bucket" "state_bucket" {
+  name          = "xlrte-state-{{.Project}}"
+  storage_class = "STANDARD"
+  location = "US"
+  versioning {
+      enabled = true
+  }
+  depends_on = [
+    google_project_service.project
+  ]
+}
+

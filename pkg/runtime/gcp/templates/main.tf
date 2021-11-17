@@ -1,3 +1,11 @@
+
+terraform {
+  backend "gcs" {
+    bucket  = "{{.StateStore}}"
+    prefix  = "terraform/{{.Environment}}"
+  }
+}
+
 provider "google" {
   project     = "{{.Project}}"
   region      = "{{.Region}}"

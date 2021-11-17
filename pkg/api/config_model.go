@@ -1,10 +1,11 @@
 package api
 
 type Environment struct {
-	Context  string `yaml:"context" validate:"required"`
-	RepoBase string `docker_repo:"context"`
-	Region   string `yaml:"region" validate:"required"`
-	EnvName  string `yaml:"-" validate:"required"`
+	Context    string `yaml:"context" validate:"required"`
+	RepoBase   string `docker_repo:"context"`
+	Region     string `yaml:"region" validate:"required"`
+	StateStore string `yaml:"state_store" validate:"required"`
+	EnvName    string `yaml:"-" validate:"required"`
 	//	Provider   string                 `yaml:"provider" validate:"required"`
 	Resources map[string]interface{} `yaml:"resources"`
 	// Deployment Deployment             `yaml:"deployment" validate:"required"`
@@ -13,11 +14,12 @@ type Environment struct {
 }
 
 type EnvContext struct {
-	Context  string
-	RepoBase string
-	Region   string
-	EnvName  string
-	Version  func(string) (string, error)
+	Context    string
+	RepoBase   string
+	Region     string
+	StateStore string
+	EnvName    string
+	Version    func(string) (string, error)
 }
 
 type Service struct {
@@ -72,11 +74,12 @@ func (vars *EnvVars) withKeys(varKeys []string, refKeys []string, secretKeys []s
 
 func (env *Environment) ctx() EnvContext {
 	return EnvContext{
-		Context:  env.Context,
-		Region:   env.Region,
-		EnvName:  env.EnvName,
-		Version:  env.Resolver.Version,
-		RepoBase: env.RepoBase,
+		Context:    env.Context,
+		Region:     env.Region,
+		EnvName:    env.EnvName,
+		StateStore: env.StateStore,
+		Version:    env.Resolver.Version,
+		RepoBase:   env.RepoBase,
 	}
 }
 
