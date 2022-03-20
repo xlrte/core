@@ -12,3 +12,5 @@ output/
 pkg/api/secrets/testdata/environments
 pkg/api/secrets/testdata/.xlrte
 coverage.out
+*.x86
+*.arm64

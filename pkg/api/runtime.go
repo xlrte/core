@@ -3,8 +3,10 @@ package api
 import (
 	"context"
 	"fmt"
+	"math/rand"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/xlrte/core/pkg/api/secrets"
 	"gopkg.in/yaml.v2"
@@ -20,13 +22,19 @@ const (
 	Delete
 )
 
+var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
+
 func InitEnvironment(ctx context.Context, baseDir, env, context, region string, runtime Runtime) error {
 	envDir := filepath.Join(baseDir, "environments", env)
 	resourceFile := filepath.Join(envDir, "resources.yaml")
 	resourceContents := fmt.Sprintf(`context: %s
 region: %s
 state_store: %s
-`, context, region, "xlrte-state-"+context)
+`, context, region, fmt.Sprintf("xlrte-state-%s-%s", context, randStringRunes(6)))
 	err := os.MkdirAll(filepath.Clean(envDir), 0750)
 	if err != nil {
 		return err
@@ -345,4 +353,12 @@ func (runtimes *Runtimes) getRuntimeFor(service *Service) (Runtime, error) {
 		}
 	}
 	return nil, fmt.Errorf("could not find a Runtime that supports service of type %s", service.Runtime)
+}
+
+func randStringRunes(n int) string {
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letterRunes[rand.Intn(len(letterRunes))] //nolint
+	}
+	return string(b)
 }

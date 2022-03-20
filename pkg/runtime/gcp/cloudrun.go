@@ -235,7 +235,7 @@ func applyTerraformTemplates(baseDir string, files []crFile, config interface{})
 	mainFile := filepath.Join(baseDir, "main.tf")
 	data, err := ioutil.ReadFile(filepath.Clean(mainFile))
 	if err != nil {
-		_, err = os.Create(mainFile)
+		_, err = os.Create(filepath.Clean(mainFile))
 		if err != nil {
 			return err
 		}

@@ -231,7 +231,7 @@ func copyModules(entries []fs.DirEntry, fsPath string, targetDir string) error {
 			if err != nil {
 				return err
 			}
-			f, err := os.Create(toMake)
+			f, err := os.Create(filepath.Clean(toMake))
 			if err != nil {
 				return err
 			}
@@ -267,7 +267,7 @@ func (rt *gcpRuntime) setProvider() error {
 	mainFile := filepath.Join(rt.baseDir, "main.tf")
 	data, err := ioutil.ReadFile(filepath.Clean(mainFile))
 	if err != nil {
-		_, err = os.Create(mainFile)
+		_, err = os.Create(filepath.Clean(mainFile))
 		if err != nil {
 			return err
 		}

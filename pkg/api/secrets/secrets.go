@@ -232,7 +232,7 @@ func initSecretsPrivate(homeDir, baseDir, env string, initFn func() (*keySetting
 			return initialized, err
 		}
 
-		_, err = os.Create(targetFile)
+		_, err = os.Create(filepath.Clean(targetFile))
 		if err != nil {
 			return initialized, err
 		}
