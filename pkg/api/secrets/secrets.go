@@ -34,7 +34,7 @@ func RandStringBytes() string {
 	for len < 10 || len > 30 {
 		len = rand.Intn(30) //nolint
 	}
-	return randStringBytesOfLength(len)
+	return RandStringBytesOfLength(len)
 }
 
 func RandIntBytes(n int) string {
@@ -45,7 +45,7 @@ func RandIntBytes(n int) string {
 	return string(b)
 }
 
-func randStringBytesOfLength(n int) string {
+func RandStringBytesOfLength(n int) string {
 	b := make([]byte, n)
 	for i := range b {
 		b[i] = letterBytes[rand.Intn(len(letterBytes))] //nolint

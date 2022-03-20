@@ -58,14 +58,6 @@ type dummyCloudRun struct {
 	Dependencies []ResourceIdentity
 }
 
-func Test_Random_String(t *testing.T) {
-	for i := 0; i < 100; i++ {
-		str := randStringRunes(i + 1)
-		assert.Len(t, str, i+1)
-		assert.False(t, strings.Contains(str, " "))
-	}
-}
-
 func Test_No_Matching_Env_Found(t *testing.T) {
 	runtimes := Runtimes{
 		Runtimes: []Runtime{&dummyRuntime{}},
