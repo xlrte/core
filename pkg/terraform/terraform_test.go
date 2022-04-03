@@ -9,9 +9,10 @@ import (
 )
 
 func Test_Init_Terraform(t *testing.T) {
-	tf, err := Init(".", os.Stdin, os.Stderr)
+	ctx := context.Background()
+	tf, err := Init(ctx, ".", os.Stdin, os.Stderr)
 	assert.NoError(t, err)
-	v, _, err := tf.Version(context.Background(), false)
+	v, _, err := tf.Version(ctx, false)
 	assert.NoError(t, err)
 	assert.NotNil(t, v)
 }

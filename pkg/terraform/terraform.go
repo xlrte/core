@@ -3,32 +3,34 @@ package terraform
 import (
 	"context"
 	"io"
-	"io/ioutil"
-	"os"
-	"path/filepath"
 
+	"github.com/hashicorp/go-version"
+	install "github.com/hashicorp/hc-install"
+	"github.com/hashicorp/hc-install/fs"
+	"github.com/hashicorp/hc-install/product"
+	"github.com/hashicorp/hc-install/releases"
+	"github.com/hashicorp/hc-install/src"
 	"github.com/hashicorp/terraform-exec/tfexec"
-	"github.com/hashicorp/terraform-exec/tfinstall"
 )
 
-func Init(workingDir string, stdOut, stdErr io.Writer) (*tfexec.Terraform, error) {
+func Init(ctx context.Context, workingDir string, stdOut, stdErr io.Writer) (*tfexec.Terraform, error) {
 
-	execPath, err := tfinstall.Find(context.Background(), &tfinstall.LookPathOption{})
+	i := install.NewInstaller()
+
+	v1_1_7 := version.Must(version.NewVersion("1.1.7"))
+
+	execPath, err := i.Ensure(ctx, []src.Source{
+		&fs.ExactVersion{
+			Product: product.Terraform,
+			Version: v1_1_7,
+		},
+		&releases.ExactVersion{
+			Product: product.Terraform,
+			Version: v1_1_7,
+		},
+	})
 	if err != nil {
-		tmpDir, err2 := ioutil.TempDir("", "tfinstall")
-		if err2 != nil {
-			return nil, err2
-		}
-		defer func() {
-			e := os.RemoveAll(filepath.Clean(tmpDir))
-			if e != nil {
-				panic(e)
-			}
-		}()
-		execPath, err2 = tfinstall.Find(context.Background(), tfinstall.LatestVersion(tmpDir, false))
-		if err2 != nil {
-			return nil, err2
-		}
+		return nil, err
 	}
 
 	tf, err := tfexec.NewTerraform(workingDir, execPath)
@@ -36,7 +38,7 @@ func Init(workingDir string, stdOut, stdErr io.Writer) (*tfexec.Terraform, error
 		return nil, err
 	}
 
-	err = tf.Init(context.Background(), tfexec.Upgrade(true))
+	err = tf.Init(ctx, tfexec.Upgrade(true))
 	if err != nil {
 		return nil, err
 	}

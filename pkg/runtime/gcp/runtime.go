@@ -96,7 +96,7 @@ You can find this under "Billing Accounts" in cloud.google.com`)
 	if err != nil {
 		return err
 	}
-	tf, err := terraform.Init(initDir, os.Stdout, os.Stderr)
+	tf, err := terraform.Init(ctx, initDir, os.Stdout, os.Stderr)
 	if err != nil {
 		return err
 	}
@@ -189,7 +189,7 @@ func (rt *gcpRuntime) Export(ctx context.Context) error {
 }
 
 func (rt *gcpRuntime) execCommand(ctx context.Context, cmd api.Command) error {
-	tf, err := terraform.Init(rt.baseDir, os.Stdout, os.Stderr)
+	tf, err := terraform.Init(ctx, rt.baseDir, os.Stdout, os.Stderr)
 	if err != nil {
 		return err
 	}
