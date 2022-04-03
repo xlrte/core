@@ -52,8 +52,11 @@ type DeploymentConfig struct {
 // Resources have an internal dependency order with outputs.
 type Runtime interface {
 	Named
+	//InitEnvironment initialises an environment for the first time, such as 'dev', 'prod' etc.
 	InitEnvironment(ctx context.Context, env, project, region string) error
+	//Init initialises for a plan or apply
 	Init(env EnvContext) error
+	//InitSecrets initialises the secrets system.
 	InitSecrets(env EnvContext, secrets []*secrets.Secret) error
 	Resources() []ResourceLoader
 	Services() []ServiceLoader

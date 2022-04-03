@@ -11,6 +11,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/xlrte/core/pkg/api"
 	"github.com/xlrte/core/pkg/api/secrets"
+	"github.com/xlrte/core/pkg/runtime/aws"
 	"github.com/xlrte/core/pkg/runtime/gcp"
 )
 
@@ -396,10 +397,12 @@ func addRunTags(command *cobra.Command, args *runArgs) {
 }
 
 func runtimes(modulesDir, baseDir string) *api.Runtimes {
-	rt := gcp.NewRuntime(modulesDir, baseDir)
+	gcpRT := gcp.NewRuntime(modulesDir, baseDir)
+	awsRT := aws.NewRuntime(modulesDir, baseDir)
 	return &api.Runtimes{
 		Runtimes: []api.Runtime{
-			rt,
+			gcpRT,
+			awsRT,
 		},
 	}
 }
